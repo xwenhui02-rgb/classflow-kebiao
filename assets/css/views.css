@@ -1,0 +1,413 @@
+/* ==========================================================================
+   ClassFlow · Views：NOW / TODAY / WEEK / CALENDAR / EXAM / SETTINGS
+   ========================================================================== */
+
+/* ============================================================ NOW · 主卡片 */
+.hero {
+  position: relative; overflow: hidden;
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  background: var(--surface-solid);
+  border: 0.5px solid var(--separator);
+  box-shadow: var(--shadow-2);
+  transition: transform var(--t-base) var(--ease-out);
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(150deg,
+      color-mix(in srgb, var(--c, var(--c-blue)) 16%, transparent) 0%,
+      color-mix(in srgb, var(--c, var(--c-blue)) 4%, transparent) 46%,
+      transparent 78%);
+  pointer-events: none;
+}
+.hero > * { position: relative; }
+
+.hero__status {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 26px; padding: 0 12px 0 10px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-11); font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+  background: var(--fill-quiet);
+  color: var(--text-2);
+}
+.hero__status .pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+}
+.hero--live .hero__status {
+  background: color-mix(in srgb, var(--c, var(--c-blue)) 18%, transparent);
+  color: var(--c, var(--c-blue));
+}
+.hero--live .hero__status .pulse { animation: pulse 2.2s var(--ease-in-out) infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+.hero--idle .hero__status { background: var(--fill-quiet); color: var(--text-2); }
+.hero--live .hero__status::after { content: ""; }
+
+.hero__course {
+  display: block; width: 100%; text-align: left;
+  margin-top: var(--sp-3);
+}
+.hero__name {
+  font-size: var(--fs-34); font-weight: var(--fw-bold);
+  letter-spacing: -0.025em; line-height: 1.14;
+  margin-bottom: var(--sp-2);
+}
+.hero__meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-15); color: var(--text-2); font-weight: var(--fw-medium);
+}
+.hero__meta span { display: inline-flex; align-items: center; gap: 6px; }
+.hero__meta .icon { width: 15px; height: 15px; color: var(--text-3); }
+
+.hero__timer {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--sp-4); margin-top: var(--sp-5);
+}
+.hero__count {
+  display: flex; align-items: baseline; gap: 6px;
+  font-size: var(--fs-44); font-weight: var(--fw-bold);
+  letter-spacing: -0.03em; line-height: 1;
+  color: var(--c, var(--text));
+  font-variant-numeric: tabular-nums;
+}
+.hero__count-unit { font-size: var(--fs-20); font-weight: var(--fw-semibold); }
+.hero__count-sub { font-size: var(--fs-13); color: var(--text-2); font-weight: var(--fw-medium); padding-bottom: 4px; }
+.hero__range { font-size: var(--fs-13); color: var(--text-2); font-weight: var(--fw-medium); text-align: right; }
+
+.hero__progress { margin-top: var(--sp-4); }
+.hero__progress-meta {
+  display: flex; justify-content: space-between;
+  font-size: var(--fs-11); color: var(--text-2); font-weight: var(--fw-medium);
+  margin-bottom: 6px;
+}
+
+.hero__actions { display: flex; gap: var(--sp-2); margin-top: var(--sp-5); flex-wrap: wrap; }
+
+/* 主卡片：空闲 / 结束态更低调 */
+.hero--idle::before { opacity: 0.55; }
+.hero--free .hero__name { font-size: var(--fs-28); }
+
+/* 双栏（桌面） */
+.now-grid { display: grid; gap: var(--sp-5); }
+@media (min-width: 1024px) {
+  .now-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
+}
+
+/* ------------------------------------------------ 今日概览小条 */
+.overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); }
+.stat {
+  padding: var(--sp-3) var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--surface-solid);
+  border: 0.5px solid var(--separator);
+  text-align: left;
+}
+.stat__value { font-size: var(--fs-24); font-weight: var(--fw-bold); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat__label { font-size: var(--fs-11); color: var(--text-2); font-weight: var(--fw-medium); margin-top: 2px; }
+
+/* ============================================================ 今日时间轴 */
+.tl { position: relative; padding-left: 0; }
+.tl__row {
+  position: relative;
+  display: grid; grid-template-columns: 62px 22px minmax(0, 1fr);
+  gap: 0 var(--sp-2);
+  padding: var(--sp-2) 0;
+}
+.tl__time {
+  text-align: right; padding-top: 12px;
+  font-size: var(--fs-11); font-weight: var(--fw-semibold); color: var(--text-3);
+  font-variant-numeric: tabular-nums; line-height: 1.35;
+}
+.tl__time b { display: block; font-size: var(--fs-13); color: var(--text-2); font-weight: var(--fw-semibold); }
+.tl__rail { position: relative; display: flex; justify-content: center; }
+.tl__rail::before {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 2px;
+  background: var(--separator); border-radius: 2px;
+}
+.tl__row:first-child .tl__rail::before { top: 18px; }
+.tl__row:last-child .tl__rail::before { bottom: calc(100% - 18px); }
+.tl__node {
+  position: relative; z-index: 1;
+  width: 11px; height: 11px; margin-top: 14px;
+  border-radius: 50%;
+  background: var(--surface-solid);
+  box-shadow: 0 0 0 2.5px var(--c, var(--text-3));
+  flex: none;
+}
+.tl__row.is-past .tl__node { background: var(--text-3); box-shadow: 0 0 0 2.5px var(--surface-solid); }
+.tl__row.is-current .tl__node { background: var(--c); animation: nodePulse 2.4s var(--ease-in-out) infinite; }
+@keyframes nodePulse {
+  0%, 100% { box-shadow: 0 0 0 2.5px var(--c), 0 0 0 2.5px color-mix(in srgb, var(--c) 30%, transparent); }
+  50% { box-shadow: 0 0 0 2.5px var(--c), 0 0 0 9px color-mix(in srgb, var(--c) 0%, transparent); }
+}
+
+.tl__card {
+  position: relative;
+  display: block; width: 100%; text-align: left;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-solid);
+  border: 0.5px solid var(--separator);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-base);
+}
+.tl__card::before {
+  content: ""; position: absolute; left: 0; top: 12px; bottom: 12px;
+  width: 3px; border-radius: 0 3px 3px 0;
+  background: var(--c, var(--text-3));
+  opacity: 0.9;
+}
+.tl__card:hover { transform: translateY(-1px); box-shadow: var(--shadow-2); }
+.tl__card:active { transform: scale(0.985); }
+.tl__row.is-past .tl__card { background: var(--surface-2); box-shadow: none; }
+.tl__row.is-past .tl__card-title { color: var(--text-2); }
+.tl__row.is-past .tl__card::before { opacity: 0.4; }
+.tl__row.is-current .tl__card { box-shadow: var(--shadow-2); }
+.tl__card-title { font-size: var(--fs-17); font-weight: var(--fw-semibold); letter-spacing: -0.01em; }
+.tl__card-meta {
+  display: flex; flex-wrap: wrap; gap: 2px var(--sp-3);
+  font-size: var(--fs-13); color: var(--text-2); font-weight: var(--fw-medium); margin-top: 3px;
+}
+.tl__card-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.tl__card-meta .icon { width: 13px; height: 13px; color: var(--text-3); }
+.tl__row.is-lunch .tl__card { background: transparent; border-style: dashed; box-shadow: none; }
+.tl__row.is-lunch .tl__card::before { display: none; }
+
+/* NOW 指示行 */
+.tl__row.is-nowrow { padding: 2px 0; }
+.tl__nowbar { display: flex; align-items: center; gap: 8px; padding: 4px 0; min-height: 30px; }
+.tl__now-line { flex: 1; height: 1.5px; background: var(--danger); border-radius: 2px; opacity: 0.75; }
+.tl__now-tag {
+  padding: 2px 8px; border-radius: var(--r-pill);
+  background: var(--danger); color: #fff;
+  font-size: 10px; font-weight: var(--fw-bold); letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.nowclock { color: var(--danger) !important; }
+.tl__node--now {
+  width: 9px; height: 9px;
+  background: var(--danger) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 24%, transparent) !important;
+  animation: none;
+}
+
+/* ============================================================ 周课表 */
+.wk { position: relative; }
+.wk__scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--sp-2); }
+.wk__grid {
+  display: grid;
+  grid-template-columns: 52px repeat(7, minmax(84px, 1fr));
+  gap: 6px;
+  min-width: 660px;
+}
+.wk__grid.is-hide-weekend { grid-template-columns: 52px repeat(5, minmax(84px, 1fr)); min-width: 480px; }
+.wk__corner { position: sticky; left: 0; z-index: 2; background: var(--surface-solid); }
+.wk__day {
+  position: sticky; top: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 8px 4px; border-radius: var(--r-sm);
+  font-size: var(--fs-13); font-weight: var(--fw-semibold);
+  transition: background-color var(--t-fast);
+}
+.wk__day small { font-size: 10px; font-weight: var(--fw-medium); color: var(--text-3); }
+.wk__day.is-today { background: color-mix(in srgb, var(--c-blue) 14%, transparent); color: var(--c-blue); }
+.wk__day.is-today small { color: var(--c-blue); }
+.wk__day.is-weekend { color: var(--text-3); }
+.wk__day.is-selected { background: var(--fill-quiet); }
+
+.wk__slot {
+  position: sticky; left: 0; z-index: 2;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+  padding-right: 6px;
+  font-size: 10px; font-weight: var(--fw-semibold); color: var(--text-3);
+  font-variant-numeric: tabular-nums; text-align: right; line-height: 1.3;
+  background: var(--surface-solid);
+}
+.wk__slot b { font-size: var(--fs-11); color: var(--text-2); }
+.wk__slot span { font-size: 9px; font-weight: var(--fw-medium); }
+
+.wk__cell { position: relative; min-height: 62px; }
+.wk__cell.is-empty::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: var(--r-sm);
+  border: 1px dashed var(--separator);
+  opacity: 0.7;
+}
+.wk__block {
+  display: flex; flex-direction: column; justify-content: center; gap: 3px;
+  width: 100%; height: 100%; min-height: 62px;
+  padding: 8px 9px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  background: var(--fill-quiet);
+  background: color-mix(in srgb, var(--c) 15%, transparent);
+  color: var(--c);
+  transition: transform var(--t-fast) var(--ease-out), filter var(--t-fast);
+  overflow: hidden;
+}
+.wk__block:hover { transform: translateY(-1.5px); filter: saturate(1.15) brightness(1.03); }
+.wk__block:active { transform: scale(0.97); }
+.wk__block-title {
+  font-size: var(--fs-13); font-weight: var(--fw-bold); line-height: 1.25;
+  color: var(--text);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.wk__block-room { font-size: 10px; font-weight: var(--fw-semibold); opacity: 0.9; }
+.wk__block-week { font-size: 9px; font-weight: var(--fw-semibold); opacity: 0.7; }
+.wk__block--lab { background-image: repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in srgb, var(--c) 12%, transparent) 6px 12px); }
+.wk__block.is-now { box-shadow: 0 0 0 2px var(--c), var(--shadow-2); }
+.wk__block.is-dim { opacity: 0.4; }
+
+/* 周次选择条 */
+.weekbar { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.weekbar__label { font-size: var(--fs-13); font-weight: var(--fw-semibold); color: var(--text-2); }
+.weekbar__spacer { flex: 1; }
+
+/* ============================================================ 月历 */
+.cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-3); }
+.cal__month { font-size: var(--fs-24); font-weight: var(--fw-bold); letter-spacing: -0.02em; }
+.cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal__dow {
+  text-align: center; font-size: var(--fs-11); font-weight: var(--fw-semibold);
+  color: var(--text-3); padding-bottom: 4px;
+}
+.cal__cell {
+  position: relative;
+  aspect-ratio: 1 / 1.06;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: 3px; padding: 5px 2px 4px;
+  border-radius: var(--r-sm);
+  background: var(--surface-solid);
+  border: 0.5px solid var(--separator);
+  transition: transform var(--t-fast) var(--ease-out), background-color var(--t-fast);
+  min-width: 0;
+}
+.cal__cell:active { transform: scale(0.94); }
+.cal__cell.is-out { opacity: 0.32; }
+.cal__cell.is-today { box-shadow: inset 0 0 0 2px var(--c-blue); }
+.cal__cell.is-today .cal__num { color: var(--c-blue); font-weight: var(--fw-bold); }
+.cal__cell.is-selected { background: var(--c-blue); border-color: var(--c-blue); }
+.cal__cell.is-selected .cal__num { color: #fff; }
+.cal__cell.is-selected .cal__dots i { box-shadow: 0 0 0 1.5px rgba(255,255,255,.55); }
+.cal__cell.is-rest { background: var(--surface-sunken); }
+.cal__num { font-size: var(--fs-13); font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums; }
+.cal__num small { display: block; font-size: 9px; font-weight: var(--fw-medium); color: var(--text-3); }
+.cal__cell.is-selected .cal__num small { color: rgba(255,255,255,.75); }
+.cal__dots { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+.cal__dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--c); display: block; }
+.cal__more { font-size: 9px; color: var(--text-3); font-weight: var(--fw-semibold); }
+
+/* 月历下方：当日安排 */
+.daypick { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 var(--sp-4); }
+.daypick button {
+  flex: none; min-width: 52px; padding: 8px 0;
+  border-radius: var(--r-sm);
+  background: var(--surface-solid);
+  border: 0.5px solid var(--separator);
+  font-size: var(--fs-11); font-weight: var(--fw-semibold); color: var(--text-2);
+  transition: transform var(--t-fast), background-color var(--t-fast), color var(--t-fast);
+}
+.daypick button b { display: block; font-size: var(--fs-15); color: var(--text); }
+.daypick button.is-active { background: var(--text); border-color: var(--text); color: var(--text-inverse); }
+.daypick button.is-active b { color: var(--text-inverse); }
+.daypick button:active { transform: scale(0.94); }
+
+/* ============================================================ 考试中心 */
+.exam {
+  display: flex; gap: var(--sp-4); align-items: flex-start;
+  padding: var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--surface-solid);
+  border: 0.5px solid var(--separator);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+.exam:active { transform: scale(0.99); }
+.exam__cd {
+  flex: none; width: 66px; text-align: center;
+  padding: 8px 4px; border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: var(--danger);
+}
+.exam__cd b { display: block; font-size: var(--fs-24); font-weight: var(--fw-bold); line-height: 1; font-variant-numeric: tabular-nums; }
+.exam__cd span { font-size: 10px; font-weight: var(--fw-semibold); }
+.exam__main { flex: 1; min-width: 0; }
+.exam__name { font-size: var(--fs-17); font-weight: var(--fw-semibold); letter-spacing: -0.01em; }
+.exam__meta { font-size: var(--fs-13); color: var(--text-2); font-weight: var(--fw-medium); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 2px var(--sp-3); }
+.exam__meta span { display: inline-flex; align-items: center; gap: 5px; }
+.exam__meta .icon { width: 13px; height: 13px; color: var(--text-3); }
+.exam.is-soon .exam__cd { background: var(--danger); color: #fff; }
+
+.method { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) 0; }
+.method + .method { border-top: 0.5px solid var(--separator); }
+.method__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+.method__name { flex: 1; font-size: var(--fs-15); font-weight: var(--fw-medium); }
+
+/* ============================================================ 设置 */
+.set-group { margin-bottom: var(--sp-6); }
+.set-group__title {
+  font-size: var(--fs-11); font-weight: var(--fw-bold);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-3); margin: 0 var(--sp-1) var(--sp-2);
+}
+.set-card {
+  background: var(--surface-solid);
+  border-radius: var(--r-md);
+  border: 0.5px solid var(--separator);
+  padding: 0 var(--sp-4);
+  overflow: hidden;
+}
+.set-card .row:first-child { min-height: 48px; }
+.about {
+  display: flex; align-items: center; gap: var(--sp-4);
+  padding: var(--sp-5) 0 var(--sp-4);
+}
+.about__mark {
+  display: grid; place-items: center;
+  width: 58px; height: 58px; border-radius: 16px;
+  background: linear-gradient(145deg, var(--c-blue), var(--c-purple));
+  color: #fff; font-size: var(--fs-24); font-weight: var(--fw-bold);
+  box-shadow: var(--shadow-1);
+}
+.about__name { font-size: var(--fs-20); font-weight: var(--fw-bold); letter-spacing: -0.015em; }
+.about__desc { font-size: var(--fs-13); color: var(--text-2); margin-top: 2px; }
+
+.kbd {
+  display: inline-block; min-width: 20px; padding: 1px 6px;
+  border-radius: 6px; background: var(--fill-quiet);
+  font-size: var(--fs-11); font-weight: var(--fw-semibold); color: var(--text-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ============================================================ 课程详情 */
+.detail__hero {
+  border-radius: var(--r-md); padding: var(--sp-4);
+  background: color-mix(in srgb, var(--c) 13%, transparent);
+  color: var(--c);
+  margin-bottom: var(--sp-5);
+}
+.detail__name { font-size: var(--fs-24); font-weight: var(--fw-bold); letter-spacing: -0.02em; color: var(--text); }
+.detail__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: var(--sp-2); }
+.kv { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: var(--sp-2) var(--sp-3); }
+.kv__k { font-size: var(--fs-13); color: var(--text-2); font-weight: var(--fw-medium); }
+.kv__v { font-size: var(--fs-15); font-weight: var(--fw-medium); }
+.kv__row { display: contents; }
+.progressline { display: flex; gap: 3px; flex-wrap: wrap; margin-top: var(--sp-3); }
+.progressline i {
+  width: 100%; max-width: 15px; height: 20px; flex: 1 1 12px;
+  border-radius: 4px; background: var(--fill-quiet);
+}
+.progressline i.done { background: var(--c); }
+.progressline i.next { background: color-mix(in srgb, var(--c) 45%, transparent); box-shadow: 0 0 0 1.5px var(--c); }
+
+/* ============================================================ 打印 */
+@media print {
+  .topbar, .tabbar, .sheet, .scrim, .toast-host { display: none !important; }
+  body { background: #fff; }
+  .main { padding: 0; }
+  .card, .exam, .tl__card { box-shadow: none; }
+}
