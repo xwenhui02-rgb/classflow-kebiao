@@ -1,0 +1,160 @@
+/* ==========================================================================
+   ClassFlow · Design Tokens
+   Apple-inspired: 克制的层级、大留白、连续曲率、轻材质
+   主题策略：默认 Auto（跟随系统），可强制 Light / Dark
+   ========================================================================== */
+
+:root {
+  /* ---- 字体刻度（8px 基线） ---- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "PingFang SC", "Helvetica Neue", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --fs-11: 0.6875rem;  /* 11 辅助标签 */
+  --fs-13: 0.8125rem;  /* 13 次要信息 */
+  --fs-15: 0.9375rem;  /* 15 正文 */
+  --fs-17: 1.0625rem;  /* 17 强调正文 */
+  --fs-20: 1.25rem;    /* 20 小标题 */
+  --fs-24: 1.5rem;     /* 24 卡片标题 */
+  --fs-28: 1.75rem;    /* 28 区块标题 */
+  --fs-34: 2.125rem;   /* 34 大标题 */
+  --fs-44: 2.75rem;    /* 44 Hero 倒计时 */
+
+  /* ---- 字重 ---- */
+  --fw-regular: 400;
+  --fw-medium: 510;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* ---- 间距（8px 基线） ---- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-7: 32px; --sp-8: 40px; --sp-9: 56px;
+
+  /* ---- 圆角（连续曲率） ---- */
+  --r-xs: 10px;   /* 标签 / 色点 */
+  --r-sm: 14px;   /* 小卡片 */
+  --r-md: 20px;   /* 标准卡片 */
+  --r-lg: 26px;   /* 主卡片 */
+  --r-xl: 34px;   /* 弹层 */
+  --r-pill: 999px;
+
+  /* ---- 动效（弹簧感；缓动由 cubic-bezier 近似） ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 120ms;
+  --t-base: 240ms;
+  --t-slow: 420ms;
+  --t-enter: 480ms;
+
+  /* ---- 层级阴影 ---- */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(0, 0, 0, 0.07);
+  --shadow-3: 0 8px 24px rgba(0, 0, 0, 0.10), 0 32px 64px rgba(0, 0, 0, 0.12);
+
+  /* ---- 布局 ---- */
+  --nav-h: 64px;
+  --topbar-h: 56px;
+  --content-max: 1180px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  /* ============================ 浅色主题 ============================ */
+  --bg: #f5f5f7;
+  --bg-tint: #eeeef1;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-solid: #ffffff;
+  --surface-2: rgba(255, 255, 255, 0.55);
+  --surface-sunken: rgba(120, 120, 128, 0.08);
+  --surface-hover: rgba(120, 120, 128, 0.06);
+
+  --text: #1d1d1f;
+  --text-2: #6e6e73;
+  --text-3: #a1a1a6;
+  --text-inverse: #ffffff;
+
+  --separator: rgba(60, 60, 67, 0.11);
+  --separator-strong: rgba(60, 60, 67, 0.20);
+
+  --fill-quiet: rgba(120, 120, 128, 0.10);
+  --fill-quiet-2: rgba(120, 120, 128, 0.16);
+
+  --blur: saturate(180%) blur(22px);
+  --scrim: rgba(0, 0, 0, 0.28);
+
+  --danger: #d70015;
+  --success: #248a3d;
+  --warning: #c25e00;
+
+  /* 课程色板（浅色模式：保证 4.5:1 正文对比度） */
+  --c-blue: #0067c6;
+  --c-indigo: #5a54d6;
+  --c-purple: #8944ab;
+  --c-green: #1e8a3e;
+  --c-orange: #c25e00;
+  --c-teal: #0b7c8a;
+  --c-pink: #d1204c;
+  --c-brown: #8a6a4f;
+  --c-gray: #6e6e73;
+}
+
+/* ============================ 深色主题 ============================ */
+[data-theme="dark"] {
+  --bg: #000000;
+  --bg-tint: #0a0a0c;
+  --surface: rgba(28, 28, 30, 0.80);
+  --surface-solid: #1c1c1e;
+  --surface-2: rgba(44, 44, 46, 0.60);
+  --surface-sunken: rgba(120, 120, 128, 0.14);
+  --surface-hover: rgba(120, 120, 128, 0.12);
+
+  --text: #f5f5f7;
+  --text-2: #98989f;
+  --text-3: #6e6e73;
+  --text-inverse: #1d1d1f;
+
+  --separator: rgba(84, 84, 88, 0.55);
+  --separator-strong: rgba(84, 84, 88, 0.80);
+
+  --fill-quiet: rgba(120, 120, 128, 0.20);
+  --fill-quiet-2: rgba(120, 120, 128, 0.30);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 12px 28px rgba(0, 0, 0, 0.55);
+  --shadow-3: 0 8px 24px rgba(0, 0, 0, 0.6), 0 32px 64px rgba(0, 0, 0, 0.7);
+
+  --scrim: rgba(0, 0, 0, 0.55);
+
+  --danger: #ff453a;
+  --success: #30d158;
+  --warning: #ff9f0a;
+
+  --c-blue: #0a84ff;
+  --c-indigo: #7d7aff;
+  --c-purple: #bf5af2;
+  --c-green: #30d158;
+  --c-orange: #ff9f0a;
+  --c-teal: #40c8e0;
+  --c-pink: #ff375f;
+  --c-brown: #ac8e68;
+  --c-gray: #98989f;
+}
+
+/* 课程色 → 统一入口：任意元素设置 --c 即可自动获得柔和底色 */
+.course-blue   { --c: var(--c-blue); }
+.course-indigo { --c: var(--c-indigo); }
+.course-purple { --c: var(--c-purple); }
+.course-green  { --c: var(--c-green); }
+.course-orange { --c: var(--c-orange); }
+.course-teal   { --c: var(--c-teal); }
+.course-pink   { --c: var(--c-pink); }
+.course-brown  { --c: var(--c-brown); }
+.course-gray   { --c: var(--c-gray); }
+
+/* 柔和底色：优先 color-mix，老浏览器回退到中性填充 */
+.soft {
+  background: var(--fill-quiet);
+  background: color-mix(in srgb, var(--c, var(--text-2)) 14%, transparent);
+}
+.tonal {
+  background: var(--fill-quiet-2);
+  background: color-mix(in srgb, var(--c, var(--text-2)) 22%, transparent);
+}
